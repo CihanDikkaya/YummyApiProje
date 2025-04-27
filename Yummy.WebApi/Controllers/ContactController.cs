@@ -17,11 +17,20 @@ namespace Yummy.WebApi.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult ContactList()
         {
-            var val = _context.Contacts.ToList();
-            return Ok(val);
+            var values = _context.Contacts.ToList();
+            return Ok(values);
         }
+        [HttpGet("GetContact")]
+        public IActionResult GetContact(int id)
+        {
+            var va = _context.Contacts.Find(id);
+            return Ok(va);
+        }
+
+        [HttpPost]
         public IActionResult CreateContact(CreateContactDTO createContactDTO)
         {
             Contact contact = new Contact();
@@ -32,6 +41,30 @@ namespace Yummy.WebApi.Controllers
             contact.OpenHours = createContactDTO.OpenHours;
             _context.Contacts.Add(contact);
             _context.SaveChanges();
-            return Ok("Ekleme İşlemi Başarılı");
+            return Ok("Ekleme başarılı");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteContact(int id)
+        {
+            var va = _context.Contacts.Find(id);
+            _context.Contacts.Remove(va);
+            _context.SaveChanges();
+            return Ok("Silme başarılı");
+        }
+        [HttpPut]
+        public IActionResult UpdateContact(UpdateContactDTO updateContactDTO)
+        {
+            Contact contact = new Contact();
+            contact.Email = updateContactDTO.Email;
+            contact.Address = updateContactDTO.Address;
+            contact.Phone = updateContactDTO.Phone;
+            contact.Location = updateContactDTO.Location;
+            contact.ContactID = updateContactDTO.ContactID;
+            contact.OpenHours = updateContactDTO.OpenHours;
+            _context.Contacts.Update(contact);
+            _context.SaveChanges();
+            return Ok("Güncelleme başarılı");
         }
     }
+}
